@@ -16,12 +16,18 @@ class << self
 	 	Appointment.where(date: date).pluck(:starttime)
 	 end
 
-	def booked_slots(date = Date.current)
-		#binding.pry
+	def booked_slots(date)
 		slots = []
-		Appointment.where(:date ==  Date.current.strftime('%m/%d/%y')).each do |i|
-			slots << i.starttime
+		if date == nil
+			Appointment.where(:date ==  Date.current.strftime('%m/%d/%y')).each do |i|
+				slots << i.starttime
+			end
+		else
+			Appointment.where(:date => date).each do |i|
+				slots << i.starttime
+			end
 		end
+
 		slots.uniq
 	end	
 end

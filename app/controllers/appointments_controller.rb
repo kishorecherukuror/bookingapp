@@ -8,11 +8,14 @@ class AppointmentsController < ApplicationController
   def show
   end
 
-  def new
-    #binding.pry
+  def new    
     @appointment = Appointment.new
-    @booked_slots = Appointment.booked_slots
-    @available_slots = Appointment.time_slot  - Appointment.booked_slots
+    @booked_slots = Appointment.booked_slots(params[:date])
+    @time_slot = Appointment.time_slot
+    @available_slots = @time_slot  - @booked_slots
+    if request.xhr?
+      render :json => {:slots => @available_slots}
+    end  
   end
 
   def edit

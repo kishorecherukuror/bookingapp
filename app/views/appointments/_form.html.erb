@@ -1,7 +1,20 @@
 <script type="text/javascript">
-  function kishore() {
-    alert("kishore");
-  }
+jQuery(function() {
+  return $(".select_id").change(function() {
+    return $.ajax({
+      type: "GET",
+      url: "/appointments/new",
+      data: {"date" : $(this).val()},
+      dataType:"json",
+      success: function(data){
+        $('#appointment_starttime').find('option').remove();
+        $.each(data['slots'], function(k, v){
+          $('#appointment_starttime').append('<option value='+v+'>'+v+'</option')
+        });        
+        }
+    });
+  });
+}); 
 </script>
 <%= form_for(@appointment) do |f| %>
   <% if @appointment.errors.any? %>
@@ -17,6 +30,11 @@
   <% end %>
 
   <div class="field">
+    <%= f.label :date %><br>
+    <%= f.text_field :date,class: "select_id"  %>
+  </div>
+
+  <div class="field">
     <%= f.label :name %><br>
     <%= f.text_field :name %>
   </div>
@@ -24,13 +42,10 @@
     <%= f.label :phonenumber %><br>
     <%= f.number_field :phonenumber %>
   </div>
-  <div class="field">
-    <%= f.label :date %><br>
-    <%= f.text_field :date, onblur: "kishore()" %>
-  </div>
-  <div class="field">
+  
+  <div class="field100">
     <%= f.label :Appointmenttime %><br>
-    <%= f.select :starttime, @available_slots %>
+    <%= f.select :starttime,"" %>
   </div>
  
   <div class="actions">
